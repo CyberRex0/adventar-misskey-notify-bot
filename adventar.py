@@ -74,5 +74,5 @@ if today.month == 12:
                 entry_user = calendar[today.day]['user']
                 mi.notes_create(**{
                     'text': f'Misskey Advent Calendar {today.year}\nDay {today.day} 「{entry_title or "(タイトル未設定)"}」 by {entry_user}\n{entry_url or "(URL未設定)"+EOL+CALENDAR_URL}',
-                    'visibility': 'home'
+                    'visibility': config.NOTE_VISIBILITY
                 })
