@@ -18,6 +18,8 @@
 
 自動で指定時間に投稿する機能はありません。cronなどを利用して自由に設定することができます。
 
+どのような内容が投稿されるかを確かめるには `run_venv.sh --dry-run` を実行します。(実際に投稿はされません)
+
 crontabの例: `0 8 1-25 12 * bash -c "cd /home/user/adventar-misskey-notify-bot && bash run_venv.sh"` (12月1日〜25日の間、毎日午前8時に実行)
 
 # Copyright

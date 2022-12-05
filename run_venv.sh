@@ -1,3 +1,3 @@
 #!/bin/bash
 . env/bin/activate
-python3 adventar.py
+python3 adventar.py "$@"
