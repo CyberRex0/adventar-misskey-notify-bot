@@ -89,7 +89,7 @@ if today.month == 12:
                 entry_url = calendar[today.day]['url']
                 entry_user = calendar[today.day]['user']
                 entry_article_title = calendar[today.day]['articleTitle']
-                text = f'{calTitle}{" "+str(today.year) if config.SHOW_YEAR else ""}\nDay {today.day} 「{entry_title or "(タイトル未設定)"}」 by {entry_user}\n\n{entry_article_title+EOL or ""}{entry_url or "(URL未設定)"+EOL+CALENDAR_URL}'
+                text = f'{calTitle}{" "+str(today.year) if config.SHOW_YEAR else ""}\nDay {today.day} 「{entry_title or "(タイトル未設定)"}」 by {entry_user}\n\n{str(entry_article_title)+EOL if entry_article_title else ""}{entry_url or "(URL未設定)"+EOL+CALENDAR_URL}'
                 if not args.dry_run:
                     mi.notes_create(**{
                         'text': text,
