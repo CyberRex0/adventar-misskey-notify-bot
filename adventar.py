@@ -40,7 +40,7 @@ for day in days:
         continue
     if len(inner.text.split('\n')) == 2:
         date, user = inner.text.split('\n')
-        calendar[int(date)] = {'user': user}
+        calendar[int(date)] = {'user': user, 'title': None, 'articleTitle': None, 'url': None}
 
 # get entry list
 entry_list = driver.find_element(By.CLASS_NAME, "EntryList")
