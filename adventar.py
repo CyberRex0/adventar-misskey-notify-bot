@@ -10,6 +10,8 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--dry-run', action='store_true')
+parser.add_argument('--force', action='store_true')
+parser.add_argument('--force-day', type=int)
 args = parser.parse_args()
 
 EOL = '\n'
@@ -81,15 +83,20 @@ calTitle = calTitleEl.text
 driver.quit()
 
 today = datetime.datetime.now()
-if today.month == 12:
-    if today.day >= 1 and today.day <= 25:
-        if calendar.get(today.day):
-            if calendar[today.day]['user'] != '登録':
-                entry_title = calendar[today.day]['title']
-                entry_url = calendar[today.day]['url']
-                entry_user = calendar[today.day]['user']
-                entry_article_title = calendar[today.day]['articleTitle']
-                text = f'{calTitle}{" "+str(today.year) if config.SHOW_YEAR else ""}\nDay {today.day} 「{entry_title or "(タイトル未設定)"}」 by {entry_user}\n\n{str(entry_article_title)+EOL if entry_article_title else ""}{entry_url or "(URL未設定)"+EOL+CALENDAR_URL}'
+today_day = today.day
+if args.force:
+    if args.force_day:
+        today_day = args.force_day
+
+if today.month == 12 or args.force:
+    if (today_day >= 1 and today_day <= 25) or args.force:
+        if calendar.get(today_day):
+            if calendar[today_day]['user'] != '登録':
+                entry_title = calendar[today_day]['title']
+                entry_url = calendar[today_day]['url']
+                entry_user = calendar[today_day]['user']
+                entry_article_title = calendar[today_day]['articleTitle']
+                text = f'{calTitle}{" "+str(today.year) if config.SHOW_YEAR else ""}\nDay {today_day} 「{entry_title or "(タイトル未設定)"}」 by {entry_user}\n\n{str(entry_article_title)+EOL if entry_article_title else ""}{entry_url or "(URL未設定)"+EOL+CALENDAR_URL}'
                 if not args.dry_run:
                     mi.notes_create(**{
                         'text': text,
