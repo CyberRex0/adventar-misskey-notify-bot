@@ -8,15 +8,25 @@ from misskey import Misskey
 import datetime
 import argparse
 
+class ArgT:
+    dry_run: bool
+    force: bool
+    force_day: int
+    calendar_id: int
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--dry-run', action='store_true')
 parser.add_argument('--force', action='store_true')
 parser.add_argument('--force-day', type=int)
-args = parser.parse_args()
+parser.add_argument('--calendar-id', type=int)
+args: ArgT = parser.parse_args()
 
 EOL = '\n'
 
 CALENDAR_ID = config.CALENDAR_ID
+if args.calendar_id:
+    CALENDAR_ID = args.calendar_id
+
 CALENDAR_URL = f"https://adventar.org/calendars/{CALENDAR_ID}"
 
 mi = Misskey(i=config.TOKEN, address=config.DOMAIN)
