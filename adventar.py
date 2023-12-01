@@ -39,7 +39,7 @@ if getCfgFromEnv('CALENDAR_ID'):
 if getCfgFromEnv('NOTE_VISIBILITY'):
     config.NOTE_VISIBILITY = getCfgFromEnv('NOTE_VISIBILITY')
 if getCfgFromEnv('SHOW_YEAR'):
-    config.SHOW_YEAR = bool(getCfgFromEnv('SHOW_YEAR'))
+    config.SHOW_YEAR = getCfgFromEnv('SHOW_YEAR') in ('1', 'true', 'True')
 
 CALENDAR_URL = f"https://adventar.org/calendars/{CALENDAR_ID}"
 
