@@ -1,18 +1,22 @@
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from classes import DummyConfig, ArgT
 import chromedriver_binary
 import time
-import config
+try:
+    import config
+except:
+    config = DummyConfig()
 from misskey import Misskey
 import datetime
 import argparse
+import os
 
-class ArgT:
-    dry_run: bool
-    force: bool
-    force_day: int
-    calendar_id: int
+def getCfgFromEnv(k: str):
+    return os.environ.get('ADVMI_' + k)
+
+EOL = '\n'
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--dry-run', action='store_true')
@@ -21,11 +25,21 @@ parser.add_argument('--force-day', type=int)
 parser.add_argument('--calendar-id', type=int)
 args: ArgT = parser.parse_args()
 
-EOL = '\n'
-
 CALENDAR_ID = config.CALENDAR_ID
 if args.calendar_id:
     CALENDAR_ID = args.calendar_id
+
+# load settings from env
+if getCfgFromEnv('TOKEN'):
+    config.TOKEN = getCfgFromEnv('TOKEN')
+if getCfgFromEnv('DOMAIN'):
+    config.DOMAIN = getCfgFromEnv('DOMAIN')
+if getCfgFromEnv('CALENDAR_ID'):
+    CALENDAR_ID = int(getCfgFromEnv('CALENDAR_ID'))
+if getCfgFromEnv('NOTE_VISIBILITY'):
+    config.NOTE_VISIBILITY = getCfgFromEnv('NOTE_VISIBILITY')
+if getCfgFromEnv('SHOW_YEAR'):
+    config.SHOW_YEAR = bool(getCfgFromEnv('SHOW_YEAR'))
 
 CALENDAR_URL = f"https://adventar.org/calendars/{CALENDAR_ID}"
 
