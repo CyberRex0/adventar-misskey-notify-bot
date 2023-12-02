@@ -1,0 +1,44 @@
+name: Scheduled Run
+
+on:
+  schedule:
+    - cron: '0 3 1-25 12 *'  # 日本時間の12月1日〜25日の12時に毎日実行されます
+  workflow_dispatch:
+
+jobs:
+  adventar:
+    runs-on: ubuntu-latest
+    environment: MISSKEY_TOKEN
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8  # 使用したいPythonバージョンを指定してください
+        
+    - name: Create and activate virtual environment
+      run: |
+        python -m pip install --upgrade pip
+        
+    - name: Install Python dependencies
+      run: |
+        pip install -r requirements.txt  # requirements.txtに依存関係が記述されていると仮定します
+        pip3 install -U "chromedriver-binary==119.0.6045.105"
+
+    - name: Create config.py
+      env:
+        MISSKEY_TOKEN: ${{ secrets.MISSKEY_TOKEN }}
+      run: |
+        echo "TOKEN = '$MISSKEY_TOKEN'" > config.py
+        echo 'DOMAIN = "https://example.ltd/"' >> config.py
+        echo 'CALENDAR_ID = 1111' >> config.py
+        echo 'NOTE_VISIBILITY = "public"' >> config.py
+        echo 'SHOW_YEAR = "true"' >> config.py
+
+    - run: cat config.py
+    
+    - run: |
+        python3 adventar.py
