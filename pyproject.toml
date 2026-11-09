@@ -1,0 +1,13 @@
+[project]
+name = "adventar-misskey-notify-bot"
+version = "0.1.0"
+description = "Post Adventar calendar updates to Misskey."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "Misskey.py",
+    "selectolax>=0.3.21",
+]
+
+[tool.uv]
+package = false

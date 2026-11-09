@@ -2,16 +2,17 @@
 これは、[Adventar](https://adventar.org/)のカレンダーを取得して、Misskeyに投稿するボットです。
 
 ## 必要なもの
-- Google Chrome (or Chromium)
-- Python 3.8以上
-- 3GB RAM (推奨 4GB)
+- Python 3.12以上
+- [uv](https://docs.astral.sh/uv/getting-started/installation/)
 
 ## セットアップ
-1. `pip3 install -U virtualenv` でvirtualenvをインストール
-2. `virtualenv env`で環境を作成、`. env/bin/activate` で入る
-3. `pip3 install -U -r requirements.txt` で依存パッケージをインストール
-4. Chromeのメジャーバージョン番号を確認し、`pip3 install -U "chromedriver-binary<メジャーバージョン番号に1足した数字"` を実行 (""は外さないこと！)
-5. config.pyをコメントに従って編集する
+1. uvをインストールし、プロジェクトのディレクトリに移動する
+2. `uv sync --locked` を実行する
+3. `config.sample.py` を `config.py` にコピーし、コメントに従って編集する
+
+依存関係は `pyproject.toml` と `uv.lock` で管理します。<br>
+`uv add` は両ファイルを更新し、`.venv` に依存パッケージをインストールします。<br>
+変更した両ファイルは一緒にコミットしてください。<br>
 
 ### config.pyの内容
 |Name|Type|Description|
@@ -25,7 +26,7 @@
 これらの設定は環境変数にて、設定名の頭に`ADVMI_` を付けて設定することもできます。(ADVMI_TOKEN等)
 
 ## 実行方法
-`run_venv.sh` を実行するだけ
+プロジェクトのディレクトリで `uv run --locked python adventar.py` を実行します。仮想環境の有効化は不要です。既存の `run_venv.sh` からも同じコマンドで起動できます。
 
 自動で指定時間に投稿する機能はありません。cronなどを利用して自由に設定することができます。
 
@@ -42,6 +43,9 @@ crontabの例:<br>
 |`--force-day DAY`|int|指定した日にちの投稿を行います。デバッグ用です。|
 |`--calendar-id ID`|int|カレンダーIDを直接指定します。|
 
+## 取得・解析処理のテスト
+`uv run --locked python -m unittest discover -s tests -v` で実行します。Misskey投稿処理は読み込まず、通信はモックに置き換えます。
+
 # Copyright
-&copy; 2022-2023 CyberRex<br>
+&copy; 2022-2026 CyberRex<br>
 MIT License

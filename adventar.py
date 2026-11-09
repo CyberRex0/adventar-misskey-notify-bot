@@ -1,9 +1,5 @@
-from selenium.webdriver import Chrome
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
+from libs.adventar_calendar import fetch_calendar
 from classes import DummyConfig, ArgT
-import chromedriver_binary
-import time
 try:
     import config
 except:
@@ -45,66 +41,11 @@ CALENDAR_URL = f"https://adventar.org/calendars/{CALENDAR_ID}"
 
 mi = Misskey(i=config.TOKEN, address=config.DOMAIN)
 
-options = Options()
-options.add_argument('--headless')
-options.add_argument('--disable-gpu')
-options.add_argument('--no-sandbox')
-driver = Chrome(options=options)
+calendar, calTitle = fetch_calendar(int(CALENDAR_ID))
 
-# wait to load explicitly
-driver.get(CALENDAR_URL)
-time.sleep(6)
-
-calendar = {}
-
-# get calendar
-days = driver.find_elements(By.CLASS_NAME, "cell")
-for day in days:
-    try:
-        inner = day.find_element(By.CLASS_NAME, "inner")
-    except:
-        continue
-    if len(inner.text.split('\n')) == 2:
-        date, user = inner.text.split('\n')
-        calendar[int(date)] = {'user': user, 'title': None, 'articleTitle': None, 'url': None}
-
-# get entry list
-entry_list = driver.find_element(By.CLASS_NAME, "EntryList")
-
-entries_day = driver.find_elements(By.XPATH, "//div[@class='head']/div[@class='date']")
-entries = driver.find_elements(By.XPATH, "//ul[@class='EntryList']/li[@class='item']")
-
-for dayEl, itemEl in zip(entries_day, entries):
-    date = int(dayEl.text.split('/')[1])
-    t = itemEl.text
-    title = None
-    url = None
-    articleTitle = None
-    if len(t.split('\n')) >= 2:
-        _x = t.split('\n')
-        title = _x[1]
-    try:
-        linkEl = itemEl.find_element(By.XPATH, ".//div[@class='article']/div[@class='left']/div[@class='link']/a")
-        url = linkEl.get_attribute('href')
-    except:
-        pass
-    try:
-        articleTitleEl = itemEl.find_element(By.XPATH, ".//div[@class='article']/div[@class='left']/div[not(@class='link')]")
-        articleTitle = articleTitleEl.text.split('|', 1)[0]
-    except:
-        pass
-    calendar[date]['articleTitle'] = articleTitle
-    calendar[date]['title'] = title
-    calendar[date]['url'] = url
-
+print(calTitle)
 for date, info in calendar.items():
     print(f'12/{date}: {info["user"]} - {info["title"]} ({info["url"]})')
-
-# get caledar title
-calTitleEl = driver.find_element(By.XPATH, '//header[@class="header"]/div[@class="inner"]/h2[@class="title"]')
-calTitle = calTitleEl.text
-
-driver.quit()
 
 today = datetime.datetime.now()
 today_day = today.day

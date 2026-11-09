@@ -1,3 +1,3 @@
 #!/bin/bash
-. env/bin/activate
-python3 adventar.py "$@"
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")" || exit 1
+exec uv run --locked python adventar.py "$@"
